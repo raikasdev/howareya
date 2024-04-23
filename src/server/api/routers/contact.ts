@@ -10,7 +10,13 @@ export const contactRouter = createTRPCRouter({
       z.object({
         name: z.string().min(1),
         url: z.string().url(),
-        frequency: z.enum(["weekly", "biweekly", "monthly"]),
+        frequency: z.enum([
+          "weekly",
+          "biweekly",
+          "monthly",
+          "quarterly",
+          "annually",
+        ]),
         timePreference: z.enum([
           "any",
           "morning",
@@ -35,7 +41,9 @@ export const contactRouter = createTRPCRouter({
       z.object({
         id: z.number(),
         url: z.string().url().optional(),
-        frequency: z.enum(["weekly", "biweekly", "monthly"]).optional(),
+        frequency: z
+          .enum(["weekly", "biweekly", "monthly", "quarterly", "annually"])
+          .optional(),
         timePreference: z
           .enum(["any", "morning", "lunchtime", "afternoon", "evening"])
           .optional(),

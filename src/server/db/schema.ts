@@ -16,23 +16,23 @@ import { type AdapterAccount } from "next-auth/adapters";
  */
 export const createTable = sqliteTableCreator((name) => `checkin_${name}`);
 
-export const contacts = createTable(
-  "contact",
-  {
-    id: int("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
-    name: text("name", { length: 256 }),
-    createdById: text("createdById", { length: 255 })
-      .notNull()
-      .references(() => users.id),
-    createdAt: int("created_at", { mode: "timestamp" })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: int("updatedAt", { mode: "timestamp" }),
-    url: text("calUrl", { length: 255 }),
-    frequency: text("frequency", { length: 255 }),
-    timePreference: text("timePreference", { length: 255 }),
-  }
-);
+export const contacts = createTable("contact", {
+  id: int("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+  name: text("name", { length: 256 }),
+  createdById: text("createdById", { length: 255 })
+    .notNull()
+    .references(() => users.id),
+  createdAt: int("created_at", { mode: "timestamp" })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: int("updatedAt", { mode: "timestamp" }),
+  url: text("calUrl", { length: 255 }),
+  frequency: text("frequency", { length: 255 }),
+  timePreference: text("timePreference", { length: 255 }),
+  latestMeeting: int("latest_meeting", { mode: "timestamp_ms" }).default(
+    sql`CURRENT_TIMESTAMP`,
+  ),
+});
 
 export const users = createTable("user", {
   id: text("id", { length: 255 }).notNull().primaryKey(),
@@ -73,7 +73,7 @@ export const accounts = createTable(
       columns: [account.provider, account.providerAccountId],
     }),
     userIdIdx: index("account_userId_idx").on(account.userId),
-  })
+  }),
 );
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
@@ -91,7 +91,7 @@ export const sessions = createTable(
   },
   (session) => ({
     userIdIdx: index("session_userId_idx").on(session.userId),
-  })
+  }),
 );
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({
@@ -107,5 +107,5 @@ export const verificationTokens = createTable(
   },
   (vt) => ({
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
-  })
+  }),
 );

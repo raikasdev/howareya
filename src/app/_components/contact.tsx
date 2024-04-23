@@ -43,6 +43,10 @@ export default function CalendarContact({ contact }: { contact: Contact }) {
         return "Weekly";
       case "biweekly":
         return "Biweekly";
+      case "quarterly":
+        return "Quarterly";
+      case "annually":
+        return "Annually";
       default:
       case "monthly":
         return "Monthly";

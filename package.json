@@ -6,6 +6,7 @@
   "scripts": {
     "build": "next build",
     "db:push": "drizzle-kit push:sqlite",
+    "db:migrate": "drizzle-kit generate:sqlite",
     "db:studio": "drizzle-kit studio",
     "dev": "next dev",
     "lint": "next lint",

@@ -3,16 +3,15 @@
 import { useRouter } from "next/navigation";
 
 import { api } from "~/trpc/react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Button } from "~/components/ui/button";
-import { Contact } from "~/app/_components/contact";
+import type { Contact } from "~/app/_components/contact";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "~/components/ui/dialog";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
@@ -24,7 +23,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 
-type Frequency = "weekly" | "biweekly" | "monthly";
+type Frequency = "weekly" | "biweekly" | "monthly" | "quarterly" | "annually";
 type TimePreference = "any" | "morning" | "lunchtime" | "afternoon" | "evening";
 
 export function EditContact({ contact }: { contact: Contact }) {

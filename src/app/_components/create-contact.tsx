@@ -16,7 +16,7 @@ import {
 import { Button } from "~/components/ui/button";
 import { CardContent, CardFooter } from "~/components/ui/card";
 
-type Frequency = "weekly" | "biweekly" | "monthly";
+type Frequency = "weekly" | "biweekly" | "monthly" | "quarterly" | "annually";
 type TimePreference = "any" | "morning" | "lunchtime" | "afternoon" | "evening";
 export function CreateContact({
   userProfile,
@@ -83,6 +83,8 @@ export function CreateContact({
               <SelectItem value="weekly">Weekly</SelectItem>
               <SelectItem value="biweekly">Biweekly</SelectItem>
               <SelectItem value="monthly">Monthly</SelectItem>
+              <SelectItem value="quarterly">Quarterly</SelectItem>
+              <SelectItem value="annually">Annually</SelectItem>
             </SelectContent>
           </Select>
         </div>

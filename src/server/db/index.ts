@@ -13,10 +13,11 @@ const globalForDb = globalThis as unknown as {
 };
 
 export const client =
-  globalForDb.client ?? createClient({
+  globalForDb.client ??
+  createClient({
     url: env.DATABASE_URL,
     authToken: env.TURSO_AUTH_TOKEN,
   });
-if (env.NODE_ENV !== "production") globalForDb.client = client;
+// if (env.NODE_ENV !== "production") globalForDb.client = client;
 
 export const db = drizzle(client, { schema });

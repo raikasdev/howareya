@@ -4,11 +4,11 @@ import { env } from "~/env";
 
 export default {
   schema: "./src/server/db/schema.ts",
-  out: './migrations',
   driver: "turso",
+  out: "./drizzle",
   dbCredentials: {
     url: env.DATABASE_URL,
     authToken: env.TURSO_AUTH_TOKEN,
   },
-  tablesFilter: ["cal-checkin_*"],
+  tablesFilter: ["checkin_*"],
 } satisfies Config;
