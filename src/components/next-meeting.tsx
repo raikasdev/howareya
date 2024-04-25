@@ -5,23 +5,20 @@ import type { Contact } from "~/components/contact";
 import { api } from "~/trpc/react";
 
 export default function NextMeetingInfo({ contact }: { contact: Contact }) {
+  const [data, setData] = useState<Record<string, unknown>>(contact);
   const freshContact = api.contact.get.useQuery(
     {
       id: contact.id,
     },
     {
-      enabled: !contact.latestMeeting,
-      staleTime: 1000,
+      enabled: !data.latestMeeting,
+      refetchInterval: 5000,
     },
   );
 
   useEffect(() => {
-    if (freshContact.data?.latestMeeting) return;
-    freshContact
-      .refetch()
-      .then(() => null)
-      .catch(() => null);
-  }, [freshContact]);
+    setData(freshContact.data ?? contact);
+  }, [freshContact, contact]);
 
   const latestContact = useMemo(
     () => freshContact.data ?? contact,
