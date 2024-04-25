@@ -42,12 +42,13 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     session: ({ session, user }) => {
       return {
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }},
+        ...session,
+        user: {
+          ...session.user,
+          id: user.id,
+        },
+      };
+    },
   },
   adapter: DrizzleAdapter(db, createTable) as Adapter,
   providers: [

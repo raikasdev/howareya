@@ -3,37 +3,45 @@ import { CircleUser, Menu, UsersRound } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
-import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
+import DropdownNav from "~/components/dropdown-nav";
+import { getServerAuthSession } from "~/server/auth";
+import { redirect } from "next/navigation";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children, // will be a page or nested layout
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerAuthSession();
+  if (!session) return redirect("/signin");
+
   return (
     <div className="flex min-h-screen w-full flex-col">
-      <header className="bg-background sticky top-0 z-10 flex h-16 items-center gap-4 border-b px-4 md:px-6">
+      <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
         <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
           <Link
             href="/"
             className="flex items-center gap-2 text-lg font-semibold md:text-base"
           >
             <UsersRound className="h-6 w-6" />
-            <span className="sr-only">HowAreYa?</span>
+            <span>HowAreYa?</span>
           </Link>
           <Link
             href="/dashboard"
-            className="text-muted-foreground hover:text-foreground transition-colors"
+            className="text-muted-foreground transition-colors hover:text-foreground"
           >
             Dashboard
+          </Link>
+          <Link
+            href="/dashboard/settings"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Settings
           </Link>
         </nav>
         <Sheet>
@@ -62,6 +70,12 @@ export default function DashboardLayout({
               >
                 Dashboard
               </Link>
+              <Link
+                href="/dashboard/settings"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Settings
+              </Link>
             </nav>
           </SheetContent>
         </Sheet>
@@ -74,12 +88,7 @@ export default function DashboardLayout({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownNav email={session.user.email ?? "My Account"} />
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

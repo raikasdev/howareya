@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { contacts } from "~/server/db/schema";
+import { client } from "~/trigger";
 
 export const contactRouter = createTRPCRouter({
   create: protectedProcedure
@@ -27,12 +28,21 @@ export const contactRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.insert(contacts).values({
-        name: input.name,
-        createdById: ctx.session.user.id,
-        url: input.url,
-        frequency: input.frequency,
-        timePreference: input.timePreference,
+      const contact = await ctx.db
+        .insert(contacts)
+        .values({
+          name: input.name,
+          createdById: ctx.session.user.id,
+          url: input.url,
+          frequency: input.frequency,
+          timePreference: input.timePreference,
+        })
+        .returning();
+      if (!contact[0]?.id) return;
+
+      await client.sendEvent({
+        name: "schedule.contact",
+        payload: { id: contact[0].id, userId: ctx.session.user.id },
       });
     }),
 
@@ -66,6 +76,26 @@ export const contactRouter = createTRPCRouter({
         );
     }),
 
+  snooze: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .update(contacts)
+        .set({
+          latestMeeting: new Date(),
+        })
+        .where(
+          and(
+            eq(contacts.createdById, ctx.session.user.id),
+            eq(contacts.id, input.id),
+          ),
+        );
+    }),
+
   delete: protectedProcedure
     .input(
       z.object({
@@ -85,7 +115,42 @@ export const contactRouter = createTRPCRouter({
 
   getAll: protectedProcedure.query(({ ctx }) => {
     return ctx.db.query.contacts.findMany({
+      where: eq(contacts.createdById, ctx.session.user.id),
       orderBy: (contacts, { desc }) => [desc(contacts.createdAt)],
     });
   }),
+
+  get: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const rows = await ctx.db
+        .select()
+        .from(contacts)
+        .where(
+          and(
+            eq(contacts.id, input.id),
+            eq(contacts.createdById, ctx.session.user.id),
+          ),
+        )
+        .limit(1);
+
+      return rows[0] ?? null;
+    }),
+
+  scheduleNow: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await client.sendEvent({
+        name: "schedule.contact",
+        payload: { id: input.id, userId: ctx.session.user.id },
+      });
+    }),
 });

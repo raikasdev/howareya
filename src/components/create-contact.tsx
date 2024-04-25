@@ -3,18 +3,9 @@
 import { useRouter } from "next/navigation";
 
 import { api } from "~/trpc/react";
-import { useState } from "react";
-import { Button } from "~/components/ui/button";
-import type { Contact } from "~/app/_components/contact";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "~/components/ui/dialog";
-import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
+import { useState } from "react";
+import { Label } from "~/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -22,54 +13,70 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { Button } from "~/components/ui/button";
+import { CardContent, CardFooter } from "~/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "~/components/ui/dialog";
+import { UserPlus } from "lucide-react";
 
-type Frequency = "weekly" | "biweekly" | "monthly" | "quarterly" | "annually";
-type TimePreference = "any" | "morning" | "lunchtime" | "afternoon" | "evening";
-
-export function EditContact({ contact }: { contact: Contact }) {
+// TODO: after create run the schedule query
+export function CreateContact({
+  userProfile,
+}: {
+  userProfile: { apiKey: string | null };
+}) {
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [meetingUrl, setMeetingUrl] = useState(contact.url ?? "");
-  const [frequency, setFrequency] = useState<Frequency>(
-    (contact.frequency ?? "weekly") as unknown as Frequency,
-  );
-  const [timePreference, setTimePreference] = useState<TimePreference>(
-    (contact.timePreference ?? "any") as unknown as TimePreference,
-  );
+  const [name, setName] = useState("");
+  const [meetingUrl, setMeetingUrl] = useState("");
+  const [frequency, setFrequency] = useState<Frequency>("weekly");
+  const [timePreference, setTimePreference] = useState<TimePreference>("any");
 
-  const updateContact = api.contact.update.useMutation({
+  const createContact = api.contact.create.useMutation({
     onSuccess: () => {
       router.refresh();
-    },
-  });
-
-  const deleteContact = api.contact.delete.useMutation({
-    onSuccess: () => {
-      router.refresh();
+      setName("");
+      setMeetingUrl("");
+      setFrequency("weekly");
+      setTimePreference("any");
     },
   });
 
   return (
-    <div className="flex gap-2">
+    <>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="mb-4">Edit contact</DialogTitle>
-            <DialogDescription>
+            <DialogDescription asChild>
               <form
                 onSubmit={async (e) => {
                   e.preventDefault();
-                  await updateContact.mutateAsync({
-                    id: contact.id,
+                  await createContact.mutateAsync({
+                    name,
                     url: meetingUrl,
                     frequency,
                     timePreference,
                   });
                   setDialogOpen(false);
                 }}
-                className="flex flex-col gap-4 text-black"
+                className="flex flex-col gap-4"
               >
-                <div>
+                <div className="flex w-full flex-col gap-2 text-black">
+                  <Label>Name (required)</Label>
+                  <Input
+                    placeholder="John Doe"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+                <div className="flex w-full flex-col gap-2 text-black">
                   <Label>Cal.com meeting URL (required)</Label>
                   <Input
                     type="url"
@@ -79,7 +86,7 @@ export function EditContact({ contact }: { contact: Contact }) {
                     onChange={(e) => setMeetingUrl(e.target.value)}
                   />
                 </div>
-                <div>
+                <div className="flex w-full flex-col gap-2 text-black">
                   <Label>Check in frequency (required)</Label>
                   <Select
                     required
@@ -98,7 +105,7 @@ export function EditContact({ contact }: { contact: Contact }) {
                     </SelectContent>
                   </Select>
                 </div>
-                <div>
+                <div className="flex w-full flex-col gap-2 text-black">
                   <Label>Preferred time</Label>
                   <Select
                     defaultValue="any"
@@ -127,25 +134,19 @@ export function EditContact({ contact }: { contact: Contact }) {
                     </SelectContent>
                   </Select>
                 </div>
-                <Button type="submit" disabled={updateContact.isPending}>
-                  {updateContact.isPending
-                    ? "Saving contact..."
-                    : "Save contact"}
+                <Button type="submit" disabled={createContact.isPending}>
+                  {createContact.isPending
+                    ? "Creating contact..."
+                    : "Create contact"}
                 </Button>
               </form>
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
       </Dialog>
-      <Button onClick={() => setDialogOpen(true)}>Edit contact</Button>
-      <Button
-        variant="destructive"
-        onClick={() => {
-          deleteContact.mutate({ id: contact.id });
-        }}
-      >
-        Remove contact
+      <Button className="w-full" onClick={() => setDialogOpen(true)}>
+        <UserPlus className="mr-2 h-5 w-5" /> Create new contact
       </Button>
-    </div>
+    </>
   );
 }

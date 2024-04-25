@@ -12,7 +12,8 @@ const fontSans = Inter({
 
 export const metadata = {
   title: "HowAreYa?",
-  description: "Cal.com CheckIn bounty prototype",
+  description:
+    "Automatically check in with your friends and family using Cal.com",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
@@ -25,7 +26,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "bg-background min-h-screen font-sans antialiased",
+          "min-h-screen bg-background font-sans antialiased",
           fontSans.variable,
         )}
       >

@@ -1,8 +1,0 @@
-{
-  "crons": [
-    {
-      "path": "/api/cron/auto-book",
-      "schedule": "0 0 * * 0"
-    }
-  ]
-}

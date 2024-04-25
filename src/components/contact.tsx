@@ -1,6 +1,7 @@
 import { CalendarDays, Clock } from "lucide-react";
 import { useMemo } from "react";
-import { EditContact } from "~/app/_components/edit-contact";
+import { EditContact } from "~/components/edit-contact";
+import NextMeetingInfo from "~/components/next-meeting";
 import {
   Card,
   CardContent,
@@ -8,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { api } from "~/trpc/react";
 
 export type Contact = {
   id: number;
@@ -18,6 +20,7 @@ export type Contact = {
   url: string | null;
   frequency: string | null;
   timePreference: string | null;
+  latestMeeting: Date | null;
 };
 
 export default function CalendarContact({ contact }: { contact: Contact }) {
@@ -59,7 +62,7 @@ export default function CalendarContact({ contact }: { contact: Contact }) {
   }, [contact.url]);
 
   return (
-    <Card x-chunk="dashboard-04-chunk-1" key={contact.id}>
+    <Card x-chunk="dashboard-04-chunk-1" className="" key={contact.id}>
       <CardHeader>
         <CardTitle>{contact.name}</CardTitle>
         <a
@@ -73,22 +76,7 @@ export default function CalendarContact({ contact }: { contact: Contact }) {
         </p>
       </CardHeader>
       <CardContent>
-        <p>
-          Next meeting is scheduled at{" "}
-          <span className="font-bold">
-            {new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString(
-              "en-GB",
-              {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-              },
-            )}
-          </span>
-        </p>
+        <NextMeetingInfo contact={contact} />
       </CardContent>
       <CardFooter>
         <EditContact contact={contact} />

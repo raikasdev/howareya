@@ -29,9 +29,7 @@ export const contacts = createTable("contact", {
   url: text("calUrl", { length: 255 }),
   frequency: text("frequency", { length: 255 }),
   timePreference: text("timePreference", { length: 255 }),
-  latestMeeting: int("latest_meeting", { mode: "timestamp_ms" }).default(
-    sql`CURRENT_TIMESTAMP`,
-  ),
+  latestMeeting: int("latest_meeting", { mode: "timestamp_ms" }),
 });
 
 export const users = createTable("user", {
