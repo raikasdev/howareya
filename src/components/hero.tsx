@@ -15,7 +15,9 @@ export const Hero = async () => {
           <h1 className="inline">
             Keep in contact with{" "}
             <span className="inline bg-gradient-to-r from-[#F596D3]  to-[#D247BF] bg-clip-text text-transparent">
-              friends, family, co-workers
+              friends, family,
+              <br />
+              co-workers
             </span>{" "}
             or just anyone using Cal.com
           </h1>
