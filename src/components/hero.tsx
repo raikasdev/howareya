@@ -1,6 +1,8 @@
 "use server";
 
+import Link from "next/link";
 import { LoginButton } from "~/components/login-button";
+import { Button } from "~/components/ui/button";
 import { getServerAuthSession } from "~/server/auth";
 
 export const Hero = async () => {
@@ -27,6 +29,11 @@ export const Hero = async () => {
 
         <div className="space-y-4 md:space-x-4 md:space-y-0">
           <LoginButton session={session} />
+          <Button className="max-w-screen w-64" variant="outline" asChild>
+            <Link href="https://github.com/raikasdev/howareya">
+              Source code
+            </Link>
+          </Button>
         </div>
       </div>
 
