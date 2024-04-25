@@ -11,7 +11,7 @@ const fontSans = Inter({
 });
 
 export const metadata = {
-  title: "HowAreYa?",
+  title: "HowAreYa? - checkin.raikas.dev",
   description:
     "Automatically check in with your friends and family using Cal.com",
   icons: [{ rel: "icon", url: "/favicon.ico" }],

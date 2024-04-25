@@ -163,14 +163,14 @@ export default async function runBook(
             responses: {
               name: me.user.name,
               email: me.user.email,
-              notes: "Automatically scheduled using howareaya.raikas.dev",
+              notes: "Automatically scheduled using howareya.raikas.dev",
             },
             metadata: {
               howareaya: true,
             },
             timeZone: me.user.timeZone,
             language: me.user.locale ?? "en",
-            description: "Automatically scheduled using howareaya.raikas.dev",
+            description: "Automatically scheduled using checkin.raikas.dev",
           });
 
           await io.runTask("book-appointment", async () => {
@@ -185,7 +185,7 @@ export default async function runBook(
                   responses: {
                     name: me.user.name,
                     email: me.user.email,
-                    notes: "Automatically scheduled using howareaya.raikas.dev",
+                    notes: "Automatically scheduled using checkin.raikas.dev",
                   },
                   metadata: {
                     howareya: "true",
@@ -193,7 +193,7 @@ export default async function runBook(
                   timeZone: me.user.timeZone,
                   language: me.user.locale ?? "en",
                   description:
-                    "Automatically scheduled using howareaya.raikas.dev",
+                    "Automatically scheduled using checkin.raikas.dev",
                 }),
               },
             );
