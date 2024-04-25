@@ -14,7 +14,6 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Button } from "~/components/ui/button";
-import { CardContent, CardFooter } from "~/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -25,11 +24,7 @@ import {
 import { UserPlus } from "lucide-react";
 
 // TODO: after create run the schedule query
-export function CreateContact({
-  userProfile,
-}: {
-  userProfile: { apiKey: string | null };
-}) {
+export function CreateContact() {
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [name, setName] = useState("");

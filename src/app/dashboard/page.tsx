@@ -85,7 +85,7 @@ export default async function Home() {
           {!!userProfile.apiKey && (
             <>
               <div className="max-w-screen md:max-w-64">
-                <CreateContact userProfile={userProfile} />
+                <CreateContact />
               </div>
               <div className="grid gap-4 lg:grid-cols-2">
                 {contacts.map((contact) => (
