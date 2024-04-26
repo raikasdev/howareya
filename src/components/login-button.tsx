@@ -15,7 +15,7 @@ export function LoginButton({ session }: { session: Session | null }) {
       }
       className="max-w-screen w-64"
     >
-      {session ? "Dashboard" : "Get started"}
+      {session ? "Dashboard" : "Sign up using Google"}
     </Button>
   );
 }

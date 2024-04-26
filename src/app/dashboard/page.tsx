@@ -17,6 +17,7 @@ import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { Check } from "lucide-react";
 import { CreateContact } from "~/components/create-contact";
 import CalendarContact from "~/components/contact";
+import { Button } from "~/components/ui/button";
 
 export default async function Home() {
   const session = await getServerAuthSession();
@@ -45,7 +46,7 @@ export default async function Home() {
               </CardHeader>
               <CardContent>
                 <p>
-                  In order to create reservations on your behalf, we need API
+                  In order to create reservations on your behalf, we need an API
                   access to your account. You can create an API key in{" "}
                   <Link
                     className="delay-50 underline transition-colors ease-in-out hover:text-blue-700"
@@ -56,17 +57,15 @@ export default async function Home() {
                   </Link>
                   .
                 </p>
-                <p>
-                  <br />
-                  You can edit this later in the{" "}
+                <Button asChild variant="default">
                   <Link
-                    className="delay-50 underline transition-colors ease-in-out hover:text-blue-700"
-                    href="/dashboard/settings"
+                    href="https://app.cal.com/settings/developer/api-keys"
+                    target="_blank"
+                    className="mt-2"
                   >
-                    Settings
+                    Create API key here
                   </Link>
-                  .
-                </p>
+                </Button>
                 {!!userProfile.apiKey && (
                   <Alert variant="success" className="z-0 mt-4">
                     <Check className="h-4 w-4" />

@@ -28,16 +28,10 @@ export function CalConnect({
 
   return (
     <div className="flex w-full flex-col">
-      {error && (
-        <Alert variant="destructive" className="z-0 mb-4">
-          <X className="h-4 w-4" />
-          <AlertTitle>API connection failed</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          setError(null);
           updateAPIKey.mutate({ apiKey });
         }}
         className="flex w-full flex-col justify-center gap-4 md:flex-row"
@@ -47,7 +41,7 @@ export function CalConnect({
           placeholder="Cal.com API key"
           value={apiKey}
           required
-          onChange={(e) => setAPIKey(e.target.value)}
+          onChange={(e) => setAPIKey(e.target.value.trim())}
         />
         <Button type="submit" disabled={updateAPIKey.isPending}>
           {updateAPIKey.isPending
@@ -57,6 +51,13 @@ export function CalConnect({
               : "Connect your Cal.com account"}
         </Button>
       </form>
+      {error && (
+        <Alert variant="destructive" className="z-0 mt-4">
+          <X className="h-4 w-4" />
+          <AlertTitle>API connection failed</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
     </div>
   );
 }
